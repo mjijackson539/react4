@@ -8,8 +8,13 @@ function loginPassword(v) { if (typeof v !== 'string' || !v.trim() || Buffer.byt
     bad('Введите пароль'); return v; }
 function password(v) { if (typeof v !== 'string' || v.length < 8 || Buffer.byteLength(v) > 72 || !v.trim())
     bad('Пароль: минимум 8 символов, максимум 72 байта'); return v; }
-function phone(v) { v = str(v, 'Телефон', 30); if (!/^\+?[\d ()-]+$/.test(v) || v.replace(/\D/g, '').length < 10 || v.replace(/\D/g, '').length > 15)
-    bad('Телефон: 10–15 цифр'); return v; }
+function phone(v) {
+  v = str(v, 'Телефон', 30);
+  const digits = v.replace(/\D/g, '');
+  if (!/^(?:\+7|7|8)[\d ()-]*$/.test(v) || digits.length !== 11)
+    bad('Телефон должен начинаться с +7, 7 или 8 и содержать 11 цифр');
+  return v;
+}
 function person(v) { v = str(v, 'ФИО', 100, 3); if (!/^[\p{L}]+(?:[ -][\p{L}]+)+$/u.test(v))
     bad('Введите имя и фамилию буквами'); return v; }
 function num(v, label, min, max, integer = true) { if (!['string', 'number'].includes(typeof v) || String(v).trim() === '' || !/^\d+(?:\.\d{1,2})?$/.test(String(v)))
